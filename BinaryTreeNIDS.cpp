@@ -1,13 +1,23 @@
 #include "BinaryTreeNIDS.h"
 #include "Packet.h"
+#include "Timer.h"
+#include <iostream>
+
+using namespace std;
 
 BinaryTreeNIDS::BinaryTreeNIDS(){
     root = nullptr;
 }
 
 void BinaryTreeNIDS::insert(const Packet& packet){
+    Timer timer;
+    timer.start();
+    double elapsed = 0;
+
     if(root == nullptr){
         root = new Node(packet);
+        elapsed = timer.stop();
+        cout << "BinaryTreeNIDS::insert() took " << elapsed << " ms." << endl;
         return;
     }
     Node* current = root;
@@ -21,6 +31,8 @@ void BinaryTreeNIDS::insert(const Packet& packet){
             current = current->right;
         }
         else{
+            elapsed = timer.stop();
+            cout << "BinaryTreeNIDS::insert() took " << elapsed << " ms." << endl;
             return;
         }
     }
@@ -30,12 +42,16 @@ void BinaryTreeNIDS::insert(const Packet& packet){
     else{
         parent->right = new Node(packet);
     }
+
+    elapsed = timer.stop();
+    cout << "BinaryTreeNIDS::insert() took " << elapsed << " ms." << endl;
 }
 
 Packet* BinaryTreeNIDS::find(int key){
-    if(root == nullptr){
-        return nullptr;
-    }
+    Timer timer;
+    timer.start();
+    double elapsed = 0;
+
     Node* current = root;
     while(current != nullptr){
         if(key < current->data.getKey()){
@@ -45,14 +61,25 @@ Packet* BinaryTreeNIDS::find(int key){
             current = current->right;
         }
         else{
+            elapsed = timer.stop();
+            cout << "BinaryTreeNIDS::find() took " << elapsed << " ms." << endl;
             return &(current->data);
         }
     }
+
+    elapsed = timer.stop();
+    cout << "BinaryTreeNIDS::find() took " << elapsed << " ms." << endl;
     return nullptr;
 }
 
 void BinaryTreeNIDS::remove(int key){
+    Timer timer;
+    timer.start();
+    double elapsed = 0;
+
     if(root == nullptr){
+        elapsed = timer.stop();
+        cout << "BinaryTreeNIDS::remove() took " << elapsed << " ms." << endl;
         return;
     }
     Node* current = root;
@@ -110,10 +137,19 @@ void BinaryTreeNIDS::remove(int key){
             delete successor;
         }
     }
+
+    elapsed = timer.stop();
+    cout << "BinaryTreeNIDS::remove() took " << elapsed << " ms." << endl;
 }
 
 void BinaryTreeNIDS::reassemble(){
+    Timer timer;
+    timer.start();
+
     reassemble(root);
+
+    double elapsed = timer.stop();
+    cout << "BinaryTreeNIDS::reassemble() took " << elapsed << " ms." << endl;
 }
 
 void BinaryTreeNIDS::reassemble(Node* node){
